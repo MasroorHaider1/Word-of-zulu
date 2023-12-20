@@ -38,7 +38,7 @@ public class Parser
         String inputLine;   // will hold the full input line
         String word1 = null;
         String word2 = null;
-
+ 
         System.out.print("> ");     // print prompt
 
         inputLine = reader.nextLine();

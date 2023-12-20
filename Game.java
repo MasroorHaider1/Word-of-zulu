@@ -34,40 +34,31 @@
       */
      private void createRooms()
      {
-         Room auditoriumLobby, centerWestHallway, centerEastHallway, fortGreenePlace,
-              toNorthWestEntrance, toSouthWestEntrance, auditorium, toNorthEastEntrance,
-              toSouthEastEntrance, southEliot, murral;
+         Room SpawnArea,Pathway,Trap,ChestRoom,BossBattle,SpecialItem,SecretPath,Exit;
        
          // create the rooms
-         auditoriumLobby = new Room("in lobby outside the auditorium");
-         centerWestHallway = new Room("in the center west hallway");
-         centerEastHallway = new Room("in the center east hallway");
-         fortGreenePlace = new Room("outside center west on Fort Greene Place");
-         toNorthWestEntrance = new Room("looking toward the north west entrance");
-         toSouthWestEntrance = new Room("looking toard the south west entrance");
-         auditorium = new Room("Auditorium");
-         toNorthEastEntrance = new Room("looking toward the north east entrance");
-         toSouthEastEntrance = new Room("looking toward the south east entrance");
-         southEliot = new Room("outside center east on South Elliot"); 
-         murral = new Room("at the murral in the lobby");
-         auditorium = new Room("in the auditorium");
+         SpawnArea = new Room("in spawn area,path is south");
+        Pathway = new Room("in the pathway, three routes, west,east or south");
+         Trap = new Room("in the trap room, you have either pathway east or special item west");
+         ChestRoom = new Room("in the Chest room, go back west to pathway");
+         BossBattle = new Room("in the south bossroom, south is exit,north is path");
+
+         SpecialItem = new Room("You in special item room.further east in the trap room,south to secret path");
+         SecretPath = new Room("you in secret path,east to exit, or north to go back special item");
+         Exit = new Room("looking toward the south entrance to the world,west is to go back to secret path, or north boss room");
          
          // initialise room exits (north, east, south, west)
-         auditoriumLobby.setExits(murral, centerEastHallway, auditorium, centerWestHallway);
-         centerWestHallway.setExits(toNorthWestEntrance, auditoriumLobby, toSouthWestEntrance, fortGreenePlace);
-         centerEastHallway.setExits(toNorthEastEntrance, southEliot, toSouthEastEntrance, auditoriumLobby);
+         SpawnArea.setExits(null,null,Pathway,null);
+         Pathway.setExits(SpawnArea,ChestRoom,BossBattle,Trap);
+         Trap.setExits(null,Pathway,null,SpecialItem);
+         SpecialItem.setExits(null,Trap,SecretPath,null);
+         SecretPath.setExits(SpecialItem,Exit,null,null);
+         BossBattle.setExits(Pathway,null,Exit,null);
+         ChestRoom.setExits(null,null,null,Pathway);
+         Exit.setExits(BossBattle,null,null,SecretPath);
+
  
-         fortGreenePlace.setExits(null, centerWestHallway, null, null);
-         toNorthWestEntrance.setExits(null, null, centerWestHallway, null);
-         toSouthWestEntrance.setExits(centerWestHallway, null, null, null);
-         auditorium.setExits(auditoriumLobby, null, null, null);
-         murral.setExits(null, null, auditoriumLobby, null);
-         southEliot.setExits(null, centerEastHallway, null, null);
-         toNorthEastEntrance.setExits(null, null, centerEastHallway, null);
-         toSouthEastEntrance.setExits(centerEastHallway, null, null, null);
-         
- 
-         currentRoom = auditoriumLobby;  // start game outside
+         currentRoom = SpawnArea;  // start game outside
      }
  
      /**
@@ -100,17 +91,10 @@
          System.out.println();
          System.out.println("You are " + currentRoom.getDescription());
          System.out.print("You can go: ");
-         if(currentRoom.northExit != null) {
-             System.out.print("north ");
-         }
-         if(currentRoom.eastExit != null) {
-             System.out.print("east ");
-         }
+         
          if(currentRoom.southExit != null) {
              System.out.print("south ");
-         }
-         if(currentRoom.westExit != null) {
-             System.out.print("west ");
+         
          }
          System.out.println();
      }
