@@ -42,7 +42,6 @@
          Trap = new Room("in the trap room, you have either pathway east or special item west");
          ChestRoom = new Room("in the Chest room, go back west to pathway");
          BossBattle = new Room("in the south bossroom, south is exit,north is path");
-
          SpecialItem = new Room("You in special item room.further east in the trap room,south to secret path");
          SecretPath = new Room("you in secret path,east to exit, or north to go back special item");
          Exit = new Room("looking toward the south entrance to the world,west is to go back to secret path, or north boss room");
@@ -91,6 +90,10 @@
          System.out.println();
          System.out.println("You are " + currentRoom.getDescription());
          System.out.print("You can go: ");
+     }
+
+
+     private void printLocationInfo(){
          
          if(currentRoom.southExit != null) {
              System.out.print("south ");
@@ -98,6 +101,7 @@
          }
          System.out.println();
      }
+    }
  
      /**
       * Given a command, process (that is: execute) the command.
