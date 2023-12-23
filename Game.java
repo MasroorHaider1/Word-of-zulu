@@ -1,19 +1,5 @@
-/**
- *  This class is the main class of the "World of Zuul" application. 
- *  "World of Zuul" is a very simple, text based adventure game.  Users 
- *  can walk around some scenery. That's all. It should really be extended 
- *  to make it more interesting!
- * 
- *  To play this game, create an instance of this class and call the "play"
- *  method.
- * 
- *  This main class creates and initialises all the others: it creates all
- *  rooms, creates the parser and starts the game.  It also evaluates and
- *  executes the commands that the parser returns.
- * 
- * @author  Michael Kölling and David J. Barnes
- * @version 2016.02.29
- */
+
+ import java.util.HashMap;
 
  public class Game 
  {
@@ -34,9 +20,10 @@
       */
      private void createRooms()
      {
-         Room SpawnArea,Pathway,Trap,ChestRoom,BossBattle,SpecialItem,SecretPath,Exit;
+         Room SpawnArea,Pathway,Trap,ChestRoom,BossBattle,SpecialItem,SecretPath,Exit,entrance;
        
          // create the rooms
+         entrance=new Room("The entrance to the spooky dungeon");
          SpawnArea = new Room("in spawn area,path is south");
         Pathway = new Room("in the pathway, three routes, west,east or south");
          Trap = new Room("in the trap room, you have either pathway east or special item west");
@@ -47,7 +34,16 @@
          Exit = new Room("looking toward the south entrance to the world,west is to go back to secret path, or north boss room");
          
          // initialise room exits (north, east, south, west)
+         SpawnArea.setExit("upstairs",entrance);
+         entrance.setExit("downstairs",SpawnArea);
+
+
+
+
          SpawnArea.setExits(null,null,Pathway,null);
+
+
+
          Pathway.setExits(SpawnArea,ChestRoom,BossBattle,Trap);
          Trap.setExits(null,Pathway,null,SpecialItem);
          SpecialItem.setExits(null,Trap,SecretPath,null);
@@ -57,7 +53,7 @@
          Exit.setExits(BossBattle,null,null,SecretPath);
 
  
-         currentRoom = SpawnArea;  // start game outside
+         currentRoom =entrance ;  // start game outside
      }
  
      /**
@@ -93,15 +89,13 @@
      }
 
 
-     private void printLocationInfo(){
-         
-         if(currentRoom.southExit != null) {
-             System.out.print("south ");
-         
-         }
-         System.out.println();
-     }
+     private void printLocationInfo() {
+       System.out.println("You are"+currentRoom.getDescription());
+       System.out.print("You can go:");
+       System.out.print(currentRoom.getExitString());
+       System.out.println();
     }
+
  
      /**
       * Given a command, process (that is: execute) the command.
@@ -162,20 +156,12 @@
          String direction = command.getSecondWord();
  
          // Try to leave current room.
-         Room nextRoom = null;
-         if(direction.equals("north")) {
-             nextRoom = currentRoom.northExit;
-         }
-         if(direction.equals("east")) {
-             nextRoom = currentRoom.eastExit;
-         }
-         if(direction.equals("south")) {
-             nextRoom = currentRoom.southExit;
-         }
-         if(direction.equals("west")) {
-             nextRoom = currentRoom.westExit;
-         }
- 
+         Room nextRoom=null;
+         nextRoom=currentRoom.getExit(direction);
+
+
+
+
          if (nextRoom == null) {
              System.out.println("There is no door!");
          }
@@ -183,21 +169,11 @@
              currentRoom = nextRoom;
              System.out.println("You are " + currentRoom.getDescription());
              System.out.print("Exits: ");
-             if(currentRoom.northExit != null) {
-                 System.out.print("north ");
-             }
-             if(currentRoom.eastExit != null) {
-                 System.out.print("east ");
-             }
-             if(currentRoom.southExit != null) {
-                 System.out.print("south ");
-             }
-             if(currentRoom.westExit != null) {
-                 System.out.print("west ");
-             }
-             System.out.println();
+              printLocationInfo();
+    }
+
          }
-     }
+     
  
      /** 
       * "Quit" was entered. Check the rest of the command to see
